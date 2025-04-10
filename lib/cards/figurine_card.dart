@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_figurines/models/figurine_model.dart';
+import 'dart:io';
 
 class FigurineCard extends StatelessWidget {
   final FigurineModel figurine;
@@ -37,7 +38,9 @@ class FigurineCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 36,
-              backgroundImage: NetworkImage(figurine.imageUrl),
+              backgroundImage: figurine.imageUrl.startsWith('/')
+              ? FileImage(File(figurine.imageUrl))
+              : NetworkImage(figurine.imageUrl) as ImageProvider,
               backgroundColor: Colors.blueGrey,
             ),
 

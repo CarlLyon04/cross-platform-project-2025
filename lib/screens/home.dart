@@ -34,7 +34,7 @@ class HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(29, 205, 159, 1),
         title: const Text(
-          "My Figurines: Battle Game | Made by Carl Lyon",
+          "My Figurines: Battle Game",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_figurines/models/figurine_model.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class CreateFigurine extends StatefulWidget {
   const CreateFigurine({super.key});
@@ -13,6 +15,20 @@ class _CreateFigurineState extends State<CreateFigurine> {
   final nameController = TextEditingController();
   final noteController = TextEditingController();
   final imageUrlController = TextEditingController();
+
+  File? imageFile;
+
+  Future<void> takePhoto() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.camera);
+
+    if (pickedImage != null) {
+      setState(() {
+        imageFile = File(pickedImage.path);
+        imageUrlController.text = pickedImage.path;
+      });
+    }
+  }
 
   void submitFigurine() {
     if (formKey.currentState!.validate()) {
@@ -45,6 +61,16 @@ class _CreateFigurineState extends State<CreateFigurine> {
           key: formKey,
           child: Column(
             children: [
+              if (imageFile != null) Image.file(imageFile!, height: 160),
+
+              IconButton(
+                icon: const Icon(Icons.camera_alt),
+                color: Colors.white,
+                iconSize: 32,
+                onPressed: takePhoto,
+              ),
+              const SizedBox(height: 20),
+
               TextFormField(
                 controller: nameController,
                 decoration: const InputDecoration(
@@ -73,21 +99,6 @@ class _CreateFigurineState extends State<CreateFigurine> {
                     (value) =>
                         value == null || value.isEmpty
                             ? "Please enter a note / description"
-                            : null,
-              ),
-              TextFormField(
-                controller: imageUrlController,
-                decoration: const InputDecoration(
-                  labelText: "Image URL",
-                  labelStyle: TextStyle(
-                    color: Color.fromRGBO(255, 255, 255, 1),
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty
-                            ? "Please enter a image URL filepath"
                             : null,
               ),
 
