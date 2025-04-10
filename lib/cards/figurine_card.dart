@@ -4,8 +4,14 @@ import 'package:my_figurines/models/figurine_model.dart';
 class FigurineCard extends StatelessWidget {
   final FigurineModel figurine;
   final VoidCallback? onTap;
+  final VoidCallback? onDelete;
 
-  const FigurineCard({super.key, required this.figurine, this.onTap});
+  const FigurineCard({
+    super.key,
+    required this.figurine,
+    this.onTap,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +25,8 @@ class FigurineCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           gradient: const LinearGradient(
             colors: [
-              Color.fromRGBO(79, 149, 158, 1),
-              Color.fromRGBO(152, 210, 192, 1),
+              Color.fromRGBO(22, 153, 118, 1),
+              Color.fromRGBO(29, 205, 159, 1),
             ],
             begin: Alignment.bottomLeft,
             end: Alignment.bottomRight,
@@ -55,6 +61,11 @@ class FigurineCard extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+            IconButton(
+              onPressed: onDelete,
+              icon: const Icon(Icons.delete),
+              color: Color.fromRGBO(0, 0, 0, 1),
             ),
           ],
         ),
