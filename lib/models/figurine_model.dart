@@ -8,7 +8,12 @@ class FigurineModel {
 
     required this.imageUrl,
 
-    
+    required this.health,
+
+    required this.damage,
+
+    required this.block,
+
     required this.timeAdded,
   });
 
@@ -19,6 +24,12 @@ class FigurineModel {
   final String note;
 
   final String imageUrl;
+
+  final int health;
+
+  final int damage;
+
+  final int block;
 
   final DateTime timeAdded;
 }

@@ -59,6 +59,11 @@ class FigurineCard extends StatelessWidget {
                     figurine.note,
                     style: const TextStyle(fontSize: 12, color: Colors.white),
                   ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Health: ${figurine.health} | Damage: ${figurine.damage} | Block: ${figurine.block}",
+                    style: const TextStyle(fontSize: 10, color: Colors.red),
+                  ),
                 ],
               ),
             ),
