@@ -1,7 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:my_figurines/cards/figurine_card.dart';
+import 'package:my_figurines/models/figurine_model.dart';
 
 class Home extends StatelessWidget {
-  const Home({super.key});
+ Home({super.key});
+
+  final List<FigurineModel> figurinesTest = [
+    FigurineModel(
+      id: 1,
+      name: "Figure 1",
+      note: "Note 1",
+      imageUrl: "abc",
+      timeAdded: DateTime(2025, 4, 10)
+    ),
+      FigurineModel(
+      id: 2,
+      name: "Figure 2",
+      note: "Note 2",
+      imageUrl: "def",
+      timeAdded: DateTime(2025, 3, 10)
+    )
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +33,13 @@ class Home extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: const SizedBox.expand(),
+      body: ListView.builder(
+        itemCount: figurinesTest.length,
+        itemBuilder: (context, index) {
+          final figurine = figurinesTest[index];
+          return FigurineCard(figurine: figurine);
+        }
+      ),
     );
   }
 }
