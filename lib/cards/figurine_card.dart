@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:my_figurines/models/figurine_model.dart';
 import 'dart:io';
 
+// A custom UI card to display a figurine's details in a styled format
 class FigurineCard extends StatelessWidget {
-  final FigurineModel figurine;
-  final VoidCallback? onTap;
-  final VoidCallback? onDelete;
+  final FigurineModel figurine; // The figurine to display
+  final VoidCallback? onTap; // Optional tap handler (not used here)
+  final VoidCallback? onDelete; // Optional delete handler
 
   const FigurineCard({
     super.key,
@@ -36,16 +37,19 @@ class FigurineCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            // Display image as local file or network image
             CircleAvatar(
               radius: 36,
-              backgroundImage: figurine.imageUrl.startsWith('/')
-              ? FileImage(File(figurine.imageUrl))
-              : NetworkImage(figurine.imageUrl) as ImageProvider,
+              backgroundImage:
+                  figurine.imageUrl.startsWith('/')
+                      ? FileImage(File(figurine.imageUrl))
+                      : NetworkImage(figurine.imageUrl) as ImageProvider,
               backgroundColor: Colors.blueGrey,
             ),
 
             const SizedBox(width: 20),
 
+            // Display figurine details
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,6 +74,8 @@ class FigurineCard extends StatelessWidget {
                 ],
               ),
             ),
+
+            // Delete icon to remove figurine
             IconButton(
               onPressed: onDelete,
               icon: const Icon(Icons.delete),

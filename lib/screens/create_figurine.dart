@@ -3,6 +3,7 @@ import 'package:my_figurines/models/figurine_model.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
+// Form screen where user creates and submits a new figurine
 class CreateFigurine extends StatefulWidget {
   const CreateFigurine({super.key});
 
@@ -16,8 +17,9 @@ class _CreateFigurineState extends State<CreateFigurine> {
   final noteController = TextEditingController();
   final imageUrlController = TextEditingController();
 
-  File? imageFile;
+  File? imageFile; // Holds the camera image file
 
+  // Opens camera and captures photo, saving path to imageFile and controller
   Future<void> takePhoto() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.camera);
@@ -30,6 +32,7 @@ class _CreateFigurineState extends State<CreateFigurine> {
     }
   }
 
+  // Validates form, constructs FigurineModel, and returns it to previous screen
   void submitFigurine() {
     if (formKey.currentState!.validate()) {
       final createdFigurine = FigurineModel(
@@ -43,7 +46,10 @@ class _CreateFigurineState extends State<CreateFigurine> {
         timeAdded: DateTime.now(),
       );
 
-      Navigator.pop(context, createdFigurine);
+      Navigator.pop(
+        context,
+        createdFigurine,
+      ); // Passes result back to home screen
     }
   }
 
@@ -63,6 +69,7 @@ class _CreateFigurineState extends State<CreateFigurine> {
             children: [
               if (imageFile != null) Image.file(imageFile!, height: 160),
 
+              // Camera icon to take a photo
               IconButton(
                 icon: const Icon(Icons.camera_alt),
                 color: Colors.white,
@@ -71,6 +78,7 @@ class _CreateFigurineState extends State<CreateFigurine> {
               ),
               const SizedBox(height: 20),
 
+              // Text field for figurine name
               TextFormField(
                 controller: nameController,
                 decoration: const InputDecoration(
@@ -86,6 +94,8 @@ class _CreateFigurineState extends State<CreateFigurine> {
                             ? "Please enter a name"
                             : null,
               ),
+
+              // Text field for figurine note/description
               TextFormField(
                 controller: noteController,
                 decoration: const InputDecoration(
@@ -104,6 +114,7 @@ class _CreateFigurineState extends State<CreateFigurine> {
 
               const SizedBox(height: 24),
 
+              // Submit button
               ElevatedButton(
                 onPressed: submitFigurine,
                 style: ElevatedButton.styleFrom(

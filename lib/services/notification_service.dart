@@ -4,19 +4,22 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 class NotificationService {
+  // Singleton instance of the notifications plugin
   static final FlutterLocalNotificationsPlugin notificationPlugin =
       FlutterLocalNotificationsPlugin();
 
+  // Initializes notification settings and permissions
   static Future<void> initialize() async {
     const AndroidInitializationSettings androidInitialize =
         AndroidInitializationSettings('mipmap/ic_launcher');
 
-    const InitializationSettings initializeSettings =
-        InitializationSettings(android: androidInitialize);
+    const InitializationSettings initializeSettings = InitializationSettings(
+      android: androidInitialize,
+    );
 
     await notificationPlugin.initialize(initializeSettings);
 
-    // Request runtime permission for Android 13+
+    // Request notification permission explicitly for Android 13+
     if (Platform.isAndroid) {
       final androidInfo = await DeviceInfoPlugin().androidInfo;
       if (androidInfo.version.sdkInt >= 33) {
@@ -28,21 +31,24 @@ class NotificationService {
     }
   }
 
+  // Displays a local notification with title and body
   static Future<void> displayNotification({
     required String title,
     required String body,
   }) async {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      'figurine_channel',
-      'Figurine Notifications',
-      importance: Importance.max,
-      priority: Priority.high,
+          'figurine_channel', // Unique channel ID
+          'Figurine Notifications', // Channel name
+          importance: Importance.max,
+          priority: Priority.high,
+        );
+
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
     );
 
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
-
+    // Show the notification
     await notificationPlugin.show(0, title, body, notificationDetails);
   }
 }

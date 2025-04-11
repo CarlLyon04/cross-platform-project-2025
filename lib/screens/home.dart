@@ -4,6 +4,7 @@ import 'package:my_figurines/models/figurine_model.dart';
 import 'package:my_figurines/screens/battle_screen.dart';
 import 'package:my_figurines/screens/create_figurine.dart';
 
+// Main home screen displaying all created figurines
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -12,8 +13,9 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  final List<FigurineModel> figurines = [];
+  final List<FigurineModel> figurines = []; // Holds all user-created figurines
 
+  // Navigates to the Create Figurine screen and adds the result to the list
   void redirectToCreateForm() async {
     final result = await Navigator.push(
       context,
@@ -38,6 +40,8 @@ class HomeState extends State<Home> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
+
+      // Display message if no figurines, otherwise build a scrollable list
       body:
           figurines.isEmpty
               ? const Center(
@@ -64,6 +68,8 @@ class HomeState extends State<Home> {
                   );
                 },
               ),
+
+      // Floating action buttons: Add Figurine and Start Battle
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,

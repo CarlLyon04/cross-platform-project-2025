@@ -5,6 +5,7 @@ import 'package:my_figurines/models/battle_model.dart';
 import 'package:my_figurines/models/figurine_model.dart';
 import 'package:my_figurines/services/notification_service.dart';
 
+// Screen for simulating a battle between two figurines
 class BattleScreen extends StatefulWidget {
   final List<FigurineModel> figurines;
 
@@ -25,13 +26,14 @@ class _BattleScreenState extends State<BattleScreen> {
   void initState() {
     super.initState();
 
-    // Notification when Battle screen is opened
+    // Show a notification when battle screen opens
     NotificationService.displayNotification(
       title: 'Battle Mode',
       body: 'Get ready to choose your figurines!',
     );
   }
 
+  // Validates selection and starts the fight
   void startFight() {
     if (combatant1 == null || combatant2 == null || combatant1 == combatant2) {
       setState(() {
@@ -50,13 +52,14 @@ class _BattleScreenState extends State<BattleScreen> {
     fightTurn(healthOne, healthTwo);
   }
 
+  // Fight simulation turn-by-turn with random variation
   void fightTurn(int healthOne, int healthTwo) async {
     while (healthOne > 0 && healthTwo > 0) {
+      // Combatant 1 attacks
       int damage1 = combatant1!.damage + (Random().nextInt(11) - 5);
       int block1 = combatant1!.block + (Random().nextInt(7) - 3);
       damage1 = damage1.clamp(1, combatant1!.damage);
       block1 = block1.clamp(0, combatant1!.block);
-
       int attackDamage1 = (damage1 - block1).clamp(0, 999);
       healthTwo -= attackDamage1;
 
@@ -69,11 +72,11 @@ class _BattleScreenState extends State<BattleScreen> {
       if (healthTwo <= 0) break;
       await Future.delayed(const Duration(seconds: 2));
 
+      // Combatant 2 attacks
       int damage2 = combatant2!.damage + (Random().nextInt(11) - 5);
       int block2 = combatant2!.block + (Random().nextInt(7) - 3);
       damage2 = damage2.clamp(1, combatant2!.damage);
       block2 = block2.clamp(0, combatant2!.block);
-
       int attackDamage2 = (damage2 - block2).clamp(0, 999);
       healthOne -= attackDamage2;
 
@@ -103,31 +106,33 @@ class _BattleScreenState extends State<BattleScreen> {
       isFighting = false;
     });
 
-    // Show winner notification
+    // Send winner notification
     await NotificationService.displayNotification(
       title: 'Battle Result',
       body: '$winner has won the battle!',
     );
   }
 
+  // Allows user to choose a combatant from the list
   void selectCombatant(Function(FigurineModel) onSelected) {
     showModalBottomSheet(
       context: context,
       backgroundColor: const Color.fromRGBO(34, 34, 34, 1),
       builder: (context) {
         return ListView(
-          children: widget.figurines.map((f) {
-            return ListTile(
-              title: Text(
-                f.name,
-                style: const TextStyle(color: Colors.white),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                onSelected(f);
-              },
-            );
-          }).toList(),
+          children:
+              widget.figurines.map((f) {
+                return ListTile(
+                  title: Text(
+                    f.name,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    onSelected(f);
+                  },
+                );
+              }).toList(),
         );
       },
     );
@@ -145,14 +150,16 @@ class _BattleScreenState extends State<BattleScreen> {
         padding: const EdgeInsets.all(18),
         child: Column(
           children: [
+            // Buttons to choose each combatant
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () => selectCombatant(
-                      (f) => setState(() => combatant1 = f),
-                    ),
+                    onPressed:
+                        () => selectCombatant(
+                          (f) => setState(() => combatant1 = f),
+                        ),
                     child: Text(
                       combatant1 == null ? "Combatant 1" : combatant1!.name,
                       textAlign: TextAlign.center,
@@ -162,9 +169,10 @@ class _BattleScreenState extends State<BattleScreen> {
                 const SizedBox(width: 18),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () => selectCombatant(
-                      (f) => setState(() => combatant2 = f),
-                    ),
+                    onPressed:
+                        () => selectCombatant(
+                          (f) => setState(() => combatant2 = f),
+                        ),
                     child: Text(
                       combatant2 == null ? "Combatant 2" : combatant2!.name,
                       textAlign: TextAlign.center,
@@ -174,12 +182,17 @@ class _BattleScreenState extends State<BattleScreen> {
               ],
             ),
             const SizedBox(height: 20),
+
+            // Start fight button
             ElevatedButton(
               onPressed: isFighting ? null : startFight,
               style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
               child: const Text("Fight!"),
             ),
+
             const SizedBox(height: 20),
+
+            // Battle log display
             Expanded(
               child: ListView.builder(
                 itemCount: displayList.length,
