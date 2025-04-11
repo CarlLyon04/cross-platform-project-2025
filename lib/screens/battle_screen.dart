@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'dart:math'; // For random number generation
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:my_figurines/models/battle_model.dart';
 import 'package:my_figurines/models/figurine_model.dart';
+import 'package:my_figurines/services/notification_service.dart';
 
 class BattleScreen extends StatefulWidget {
   final List<FigurineModel> figurines;
@@ -19,6 +20,17 @@ class _BattleScreenState extends State<BattleScreen> {
   final List<BattleModel> battleLog = [];
   final List<String> displayList = [];
   bool isFighting = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Notification when Battle screen is opened
+    NotificationService.displayNotification(
+      title: 'Battle Mode',
+      body: 'Get ready to choose your figurines!',
+    );
+  }
 
   void startFight() {
     if (combatant1 == null || combatant2 == null || combatant1 == combatant2) {
@@ -55,8 +67,7 @@ class _BattleScreenState extends State<BattleScreen> {
       });
 
       if (healthTwo <= 0) break;
-
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 2));
 
       int damage2 = combatant2!.damage + (Random().nextInt(11) - 5);
       int block2 = combatant2!.block + (Random().nextInt(7) - 3);
@@ -73,8 +84,7 @@ class _BattleScreenState extends State<BattleScreen> {
       });
 
       if (healthOne <= 0) break;
-
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 2));
     }
 
     final winner = healthOne > 0 ? combatant1!.name : combatant2!.name;
@@ -92,6 +102,12 @@ class _BattleScreenState extends State<BattleScreen> {
       );
       isFighting = false;
     });
+
+    // Show winner notification
+    await NotificationService.displayNotification(
+      title: 'Battle Result',
+      body: '$winner has won the battle!',
+    );
   }
 
   void selectCombatant(Function(FigurineModel) onSelected) {
@@ -100,19 +116,18 @@ class _BattleScreenState extends State<BattleScreen> {
       backgroundColor: const Color.fromRGBO(34, 34, 34, 1),
       builder: (context) {
         return ListView(
-          children:
-              widget.figurines.map((f) {
-                return ListTile(
-                  title: Text(
-                    f.name,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    onSelected(f);
-                  },
-                );
-              }).toList(),
+          children: widget.figurines.map((f) {
+            return ListTile(
+              title: Text(
+                f.name,
+                style: const TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                onSelected(f);
+              },
+            );
+          }).toList(),
         );
       },
     );
@@ -135,10 +150,9 @@ class _BattleScreenState extends State<BattleScreen> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed:
-                        () => selectCombatant(
-                          (f) => setState(() => combatant1 = f),
-                        ),
+                    onPressed: () => selectCombatant(
+                      (f) => setState(() => combatant1 = f),
+                    ),
                     child: Text(
                       combatant1 == null ? "Combatant 1" : combatant1!.name,
                       textAlign: TextAlign.center,
@@ -148,10 +162,9 @@ class _BattleScreenState extends State<BattleScreen> {
                 const SizedBox(width: 18),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed:
-                        () => selectCombatant(
-                          (f) => setState(() => combatant2 = f),
-                        ),
+                    onPressed: () => selectCombatant(
+                      (f) => setState(() => combatant2 = f),
+                    ),
                     child: Text(
                       combatant2 == null ? "Combatant 2" : combatant2!.name,
                       textAlign: TextAlign.center,

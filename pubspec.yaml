@@ -11,6 +11,9 @@ dependencies:
     sdk: flutter
   
   image_picker: ^1.0.4
+  flutter_local_notifications: ^17.2.1
+  permission_handler: ^11.3.0
+  device_info_plus: ^9.1.1
 
 dev_dependencies:
   flutter_test:
